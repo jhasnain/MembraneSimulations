@@ -2,7 +2,7 @@
 #include "membranesys.h"
 #include "utilities.h"
 
-// 
+ 
 const char *__restrict__ ArgumentPrint(){
   return "\nMC properties:\n"
   "   MC Sweeps:       %d\n"
