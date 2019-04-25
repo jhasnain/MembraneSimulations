@@ -2,7 +2,7 @@
 #include "membranesys.h"
 #include "utilities.h"
 
- 
+// 
 const char *__restrict__ ArgumentPrint(){
   return "\nMC properties:\n"
   "   MC Sweeps:       %d\n"
@@ -23,7 +23,7 @@ const char *__restrict__ ArgumentPrint(){
   "   Lengths:         %s\n"
   "   Binding str:     %s\n"
   "   Binding ranges:  %s\n"
-  "   ChemPot vals:    %s\n"
+  "   Densities:       %s\n"
   "\nOutput Options:\n"
   "   Tag:             %s\n"
   "   OutputDir:       %s\n"
@@ -58,7 +58,7 @@ const char *__restrict__ ArgumentRead(){
   "   Lengths:         %[^\n]"
   "   Binding str:     %[^\n]"
   "   Binding ranges:  %[^\n]"
-  "   ChemPot vals:    %[^\n]"
+  "   Densities:       %[^\n]"
   "\nOutput Options:\n"
   "   Tag:             %[^\n]"
   "   OutputDir:       %[^\n]"
@@ -95,7 +95,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state){
     case 'j':strcpy(arguments->BindPType, arg);break;
     case 'k':strcpy(arguments->RanPType,  arg);break;
     
-    case 'l':strcpy(arguments->ChemPots,  arg);break;
+    case 'l':strcpy(arguments->Densities,  arg);break;
         
     case 'm':strcpy(arguments->OutputDir, arg);break;
     case 'n':strcpy(arguments->Tag,  arg);break;
@@ -143,26 +143,26 @@ void InterpretInputCommands( struct arguments *arguments, int argc, char **argv)
   snprintf(arguments->LPType,    1024, "0.0 0.0");
   snprintf(arguments->BindPType, 1024, "4.0");
   snprintf(arguments->RanPType,  1024, "4.0");
-  snprintf(arguments->ChemPots,  1024, "-4.0 -4.0");
+  snprintf(arguments->Densities,  1024, "31250.0 200.0");
 
 //   arguments->NumPType=2;
 //   snprintf(arguments->LPType,    1024, "0.0 2.0 0.0 2.0");
 //   snprintf(arguments->BindPType, 1024, "4.0 0.0");
 //   snprintf(arguments->RanPType,  1024, "4.0 4.0");
-//   snprintf(arguments->ChemPots,  1024, "-4.0 -4.0 -4.0 -4.0");
+//   snprintf(arguments->Densities,  1024, "800.0 10.0 200.0 100.0");
   
 //   arguments->NumPType=3;
 //   snprintf(arguments->LPType,    1024, "8.0 16.0 24.0 8.0 16.0 24.0");
 //   snprintf(arguments->BindPType, 1024, "5.0 5.0 0.0");
 //   snprintf(arguments->RanPType,  1024, "4.5 4.5 0.0");
-//   snprintf(arguments->ChemPots,  1024, "-4.0 -4.0 -4.0 -4.0 -4.0 -4.0");
+//   snprintf(arguments->Densities,  1024, "-4.0 -4.0 -4.0 -4.0 -4.0 -4.0");
   
 //MC properties
   arguments->MDisp=0.4;
   
-  arguments->z0=16.0;
+  arguments->z0=200.0;
   arguments->BiasStr=10.0;
-  arguments->theta0=16.0;
+  arguments->theta0=200.0;
   snprintf(arguments->BiasType, 1024, "Harmonic");
   arguments->MCSweeps=1000000;
   arguments->RandSeed=8491446;
@@ -197,7 +197,7 @@ void PrintInputCommands(FILE *fp, struct arguments *arguments){
               arguments->Nx, arguments->Ny,
               arguments->NumPType,
               arguments->LPType, arguments->BindPType, arguments->RanPType,
-              arguments->ChemPots,
+              arguments->Densities,
               arguments->Tag, arguments->OutputDir,
               arguments->framenums, arguments->datnums, arguments->Histbnums,
               arguments->Inputfile, arguments->Equil,
@@ -274,7 +274,7 @@ void ReadInputCommands(FILE *fp, struct arguments *arguments){
                      &arguments->Nx, &arguments->Ny,
                      &arguments->NumPType,
                      &arguments->LPType, &arguments->BindPType, &arguments->RanPType,
-                     &arguments->ChemPots,
+                     &arguments->Densities,
                      &arguments->Tag, &arguments->OutputDir,
                      &arguments->framenums, &arguments->datnums, &arguments->Histbnums,
                      &arguments->Inputfile, &arguments->Equil,

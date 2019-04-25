@@ -187,12 +187,12 @@ void CreateBiasPotential(sys *Sys, struct arguments *arguments){
 }
 
 void SetChemPotParams(sys *Sys, struct arguments *arguments){
-  char ChemPots[1024], LPType[1024], BindPType[1024], RanPType[1024];
+  char Densities[1024], LPType[1024], BindPType[1024], RanPType[1024];
   int pflavors = Sys->NumPTypes = arguments->NumPType, i;
-  
+  double alpha = 1e6*arguments->Nx*arguments->Ny/(arguments->Lx*arguments->Ly);
   
   if(pflavors>0){
-    strcpy(ChemPots,  arguments->ChemPots);
+    strcpy(Densities, arguments->Densities);
     strcpy(BindPType, arguments->BindPType);
     strcpy(RanPType,  arguments->RanPType);
     strcpy(LPType,    arguments->LPType);
@@ -212,10 +212,25 @@ void SetChemPotParams(sys *Sys, struct arguments *arguments){
     ExtractValuesFromStringList( (void *) Sys->RanPType, "DOUBLE", RanPType,  pflavors);
   
     double *tmp = (double *)malloc(2*pflavors*sizeof(double));
+    ExtractValuesFromStringList( (void *) tmp, "DOUBLE", Densities,  2*pflavors);
     
-    ExtractValuesFromStringList( (void *) tmp, "DOUBLE", ChemPots,  2*pflavors);
-    for(i=0;i<pflavors;i++){Sys->Fugacities[0][i] = exp(tmp[i]);}
-    for(i=pflavors;i<2*pflavors;i++){Sys->Fugacities[1][i-pflavors] = exp(tmp[i]);} 
+    double zbar;
+    zbar=0.0;
+    for(i=0;i<pflavors;i++) zbar+=tmp[i];
+    zbar = zbar/(alpha-zbar);
+    for(i=0;i<pflavors;i++) Sys->Fugacities[0][i] = (1.0+zbar)*tmp[i]/alpha;
+    
+    zbar=0.0;
+    for(i=pflavors;i<2*pflavors;i++) zbar+=tmp[i];
+    zbar = zbar/(alpha-zbar);
+    for(i=pflavors;i<2*pflavors;i++) Sys->Fugacities[1][i-pflavors] = (1.0+zbar)*tmp[i]/alpha;
+
+//     printf("zbarbot %lf alphabot %lf\n", zbar, alpha);
+//     printf("zbartop %lf alphatop %lf\n", zbar, alpha);
+//     printf("z1 %lf z2 %lf\n", Sys->Fugacities[0][0], Sys->Fugacities[1][0]);
+//     exit(1);
+//     for(i=0;i<pflavors;i++){Sys->Fugacities[0][i] = exp(tmp[i]);}
+//     for(i=pflavors;i<2*pflavors;i++){Sys->Fugacities[1][i-pflavors] = exp(tmp[i]);} 
     
     ExtractValuesFromStringList( (void *) tmp, "DOUBLE", LPType,  2*pflavors);
     for(i=0;i<pflavors;i++){Sys->LPType[0][i] = tmp[i];}

@@ -28,7 +28,7 @@ struct arguments{
   int framenums, datnums, Histbnums;
   
 // GCMCProperties
-  char ChemPots[2024];
+  char Densities[2024];
   
 // Restart/Equilibration option
   char Inputfile[1024], Equil[3];
@@ -57,7 +57,7 @@ and the help message. End it with an empty item {0}.
   {"BindPType" , 'j', "LIST"  , 0, "Binding strength of each protein type" },
   {"RanPType"  , 'k', "LIST"  , 0, "Range of binding of each protein type" },
   
-  {"ChemPots"  , 'l', "LIST"  , 0, "Chemical potential of each species on the membrane, the first [NumPType] entries are assigned to the bottom mesh, the second set to the top" },
+  {"Densities" , 'l', "LIST"  , 0, "Densities of the particle resarvoir, in molecules per micron squared. The first [NumPType] entries are assigned to the bottom mesh, the second set to the top" },
   
   {"OutDir"    , 'm', "DIR"   , 0, "Output directory" },
   {"Tag"       , 'n', "STR"   , 0, "Cosmetic tag to add to filenames" },
